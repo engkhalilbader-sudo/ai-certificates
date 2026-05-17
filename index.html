@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+مبادرة عقول تصنع الوطن
+</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+body{
+
+    margin:0;
+    background:#eef3ff;
+    font-family:Tahoma;
+    text-align:center;
+}
+
+.container{
+
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.panel{
+
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+input,
+select{
+
+    width:90%;
+    max-width:450px;
+
+    padding:14px;
+
+    margin:10px;
+
+    border-radius:10px;
+
+    border:1px solid #ccc;
+
+    font-size:18px;
+}
+
+button{
+
+    padding:14px 24px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#0d47a1;
+
+    color:white;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+button:hover{
+
+    opacity:0.9;
+}
+
+////////////////////////////////////////////////////
+/* الشهادة */
+////////////////////////////////////////////////////
+
+#certificate{
+
+    display:none;
+
+    width:1100px;
+
+    min-height:750px;
+
+    background:white;
+
+    margin:30px auto;
+
+    border:15px solid #caa427;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.bg{
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:0.08;
+
+    background-image:
+
+    url('https://upload.wikimedia.org/wikipedia/commons/9/93/Emblem_of_the_United_Arab_Emirates.svg'),
+
+    url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Outline_Map_of_UAE.svg');
+
+    background-repeat:no-repeat;
+
+    background-size:
+    220px,
+    340px;
+
+    background-position:
+    left 30px top 30px,
+    right 40px bottom 40px;
+}
+
+.content{
+
+    position:relative;
+
+    padding:50px;
+}
+
+.title{
+
+    font-size:48px;
+
+    color:#b8860b;
+
+    font-weight:bold;
+}
+
+.school{
+
+    font-size:30px;
+
+    color:#0d47a1;
+
+    margin-top:10px;
+}
+
+.name{
+
+    font-size:44px;
+
+    margin-top:30px;
+
+    font-weight:bold;
+}
+
+.role{
+
+    font-size:28px;
+
+    color:#444;
+
+    margin-top:10px;
+}
+
+.text{
+
+    font-size:24px;
+
+    line-height:2;
+
+    margin-top:30px;
+}
+
+.serial{
+
+    margin-top:20px;
+
+    font-size:20px;
+
+    color:#333;
+}
+
+.qr{
+
+    margin-top:20px;
+}
+
+.footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:50px;
+
+    padding:0 50px;
+
+    font-size:18px;
+}
+
+@media(max-width:1200px){
+
+    #certificate{
+
+        transform:scale(0.7);
+
+        transform-origin:top center;
+
+        margin-bottom:-180px;
+    }
+}
+
+@media(max-width:768px){
+
+    #certificate{
+
+        transform:scale(0.42);
+
+        margin-bottom:-380px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="panel">
+
+<h1>
+مبادرة عقول تصنع الوطن
+</h1>
+
+<input
+id="name"
+placeholder="الاسم الكامل">
+
+<br>
+
+<select id="type"
+onchange="checkType()">
+
+<option value="">
+اختر النوع
+</option>
+
+<option>
+طالب
+</option>
+
+<option>
+معلم
+</option>
+
+<option>
+ولي أمر
+</option>
+
+<option>
+إداري
+</option>
+
+<option value="other">
+أخرى
+</option>
+
+</select>
+
+<br>
+
+<input
+id="job"
+placeholder="اكتب المهنة"
+style="display:none">
+
+<br>
+
+<label>
+
+<input
+type="checkbox"
+id="agree">
+
+أتعهد بالعمل من أجل خدمة الوطن
+بالعلم والتكنولوجيا والابتكار
+
+</label>
+
+<br><br>
+
+<button onclick="generateCertificate()">
+
+إنشاء الشهادة
+
+</button>
+
+</div>
+
+////////////////////////////////////////////////////
+<!-- الشهادة -->
+////////////////////////////////////////////////////
+
+<div id="certificate">
+
+<div class="bg"></div>
+
+<div class="content">
+
+<div class="title">
+شهادة شكر وتقدير
+</div>
+
+<div class="school">
+مدرسة الجرف للبنين - حلقة ثانية
+</div>
+
+<h2>
+مبادرة عقول تصنع الوطن
+</h2>
+
+<div class="name"
+id="displayName">
+
+</div>
+
+<div class="role"
+id="displayRole">
+
+</div>
+
+<div class="text">
+
+انطلاقاً من إيماننا بأن العلم
+والتكنولوجيا أساس نهضة الأمم،
+تأتي مبادرة
+"عقول تصنع الوطن"
+لتعزيز قيم الانتماء والولاء
+لدولة الإمارات العربية المتحدة،
+وتنمية مهارات الطلبة
+في الذكاء الاصطناعي
+والتكنولوجيا الحديثة.
+
+</div>
+
+<div class="serial"
+id="serialNumber">
+
+</div>
+
+<div class="qr"
+id="qrcode">
+
+</div>
+
+<div class="footer">
+
+<div>
+
+نادي الإبداع والابتكار
+<br>
+
+قسم الذكاء الاصطناعي
+والتكنولوجيا
+
+</div>
+
+<div>
+
+مديرة المدرسة
+<br>
+
+مريم السويدي
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+////////////////////////////////////////////////////
+
+const scriptURL =https://script.google.com/macros/s/AKfycbw9o7GOe0E6KHX5wXrsQcVI-7yFTwJUesr6Afz2CLsp3AEGqDIjlZH19UsQ9_J3CNcHKQ/exec;
+
+////////////////////////////////////////////////////
+
+function checkType(){
+
+const type =
+document.getElementById("type").value;
+
+document.getElementById("job")
+.style.display =
+type === "other"
+? "block"
+: "none";
+}
+
+////////////////////////////////////////////////////
+
+async function generateCertificate(){
+
+const name =
+document.getElementById("name")
+.value.trim();
+
+let type =
+document.getElementById("type")
+.value;
+
+const agree =
+document.getElementById("agree")
+.checked;
+
+////////////////////////////////////////////////////
+
+if(type === "other"){
+
+type =
+document.getElementById("job")
+.value;
+}
+
+////////////////////////////////////////////////////
+
+if(name === "" ||
+type === "" ||
+!agree){
+
+alert(
+"يرجى تعبئة جميع البيانات والتعهد"
+);
+
+return;
+}
+
+////////////////////////////////////////////////////
+
+const response =
+await fetch(scriptURL,{
+
+method:"POST",
+
+body:JSON.stringify({
+
+name:name,
+
+type:type,
+
+date:new Date()
+.toLocaleString()
+
+})
+
+});
+
+////////////////////////////////////////////////////
+
+const data =
+await response.json();
+
+////////////////////////////////////////////////////
+
+document.getElementById("displayName")
+.innerText = name;
+
+document.getElementById("displayRole")
+.innerText = type;
+
+document.getElementById("serialNumber")
+.innerText =
+"الرقم التسلسلي : " +
+data.serial;
+
+////////////////////////////////////////////////////
+
+document.getElementById("certificate")
+.style.display = "block";
+
+////////////////////////////////////////////////////
+
+document.getElementById("qrcode")
+.innerHTML = "";
+
+new QRCode(
+document.getElementById("qrcode"),
+{
+text:data.verify,
+width:120,
+height:120
+});
+
+////////////////////////////////////////////////////
+
+const canvas =
+await html2canvas(
+document.getElementById("certificate"),
+{
+scale:2
+});
+
+const link =
+document.createElement("a");
+
+link.download =
+"certificate.png";
+
+link.href =
+canvas.toDataURL();
+
+link.click();
+
+}
+
+</script>
+
+</body>
+
+</html>
