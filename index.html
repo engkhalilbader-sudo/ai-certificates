@@ -172,8 +172,8 @@ body{
 #cert .pres-to{
   position:absolute;
   top:340px;
-  left:50%;transform:translateX(-50%);
-  white-space:nowrap;
+  left:0; right:0;
+  text-align:center;
   font-family:'Tajawal',sans-serif;font-size:17px;font-weight:600;
   color:#3d2700;letter-spacing:.5px;
 }
@@ -182,8 +182,8 @@ body{
 #cert .cert-name{
   position:absolute;
   top:372px;
-  left:50%;transform:translateX(-50%);
-  white-space:nowrap;
+  left:0; right:0;
+  text-align:center;
   font-family:'Amiri',serif;font-size:68px;font-weight:700;
   color:#0B1E3E;line-height:1.0;
   text-shadow:0 2px 6px rgba(0,0,0,.1);
@@ -206,9 +206,10 @@ body{
 #cert .cert-date{
   position:absolute;
   bottom:225px;
-  left:50%;transform:translateX(-50%);
+  left:0; right:0;
+  text-align:center;
   font-family:'Tajawal',sans-serif;font-size:20px;
-  color:#2a2a2a;white-space:nowrap;letter-spacing:1.5px;font-weight:700;
+  color:#2a2a2a;letter-spacing:1.5px;font-weight:700;
 }
 </style>
 </head>
@@ -275,7 +276,7 @@ body{
     <div class="fld">
       <label>الصفة</label>
       <select class="sel" id="inputType">
-         <option value="طالب">🎓 طالب</option>
+        <option value="طالب">🎓 طالب</option>
         <option value="معلم">📚 معلم</option>
 	<option value="إداري">👨‍👧 إداري</option>
         <option value="ولي أمر">👨‍👧 ولي أمر</option>
@@ -537,15 +538,23 @@ async function downloadCert(){
     const prev  = inner.style.transform;
     inner.style.transform = 'scale(1)';
 
-    await new Promise(r => setTimeout(r, 250));
+    // انتظر تحميل الخطوط العربية كاملاً
+    await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 600));
 
-    const canvas = await html2canvas(document.getElementById('cert'), {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null,
-      width: 1492, height: 1054,
-      logging: false, imageTimeout: 15000
+    const certEl = document.getElementById('cert');
+
+    const canvas = await html2canvas(certEl, {
+      scale            : 2,
+      useCORS          : true,
+      allowTaint       : true,
+      backgroundColor  : '#FAF4E4',
+      width            : 1492,
+      height           : 1054,
+      logging          : false,
+      imageTimeout     : 20000,
+      letterRendering  : true,   // مهم لصحة النص العربي
+      foreignObjectRendering: false
     });
 
     inner.style.transform = prev;
