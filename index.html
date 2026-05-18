@@ -279,8 +279,7 @@ body{
         <option value="طالبة">🎓 طالبة</option>
         <option value="معلم">📚 معلم</option>
         <option value="معلمة">📚 معلمة</option>
-        <option value="أخر">👨‍👧 أخر</option>
-	<option value="">👨‍👧 ولي أمر</option>
+        <option value="ولي أمر">👨‍👧 ولي أمر</option>
       </select>
     </div>
   </div>
@@ -412,7 +411,7 @@ function toggleBtn(){
    COUNTER
 ════════════════════════════════════ */
 // ← ضع رابط Google Apps Script هنا بعد النشر
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxH-fwt7Q6pcpuuh1QcMjcR2s9IFQckWAn3yv2pm7i23cCyXoSvCatd67-lPM8jyJKQEg/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzoxV19e45iLMzmkzjAmDTBM9EABM3ARRDhTLgtufwnwi_hNEHpA5xZMfdqbMbG7999Lg/exec';
 
 function toAr(n){
   return n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
@@ -434,7 +433,8 @@ async function loadCount(){
     return;
   }
   try{
-    const r = await fetch(SHEETS_URL, { method:'GET', mode:'cors' });
+    const url = SHEETS_URL + '?action=count&t=' + Date.now();
+    const r = await fetch(url, { method:'GET', mode:'cors' });
     const d = await r.json();
     animCount(d.count || 0);
   } catch {
@@ -501,18 +501,27 @@ async function generate(){
   }
 
   try {
-    const r = await fetch(SHEETS_URL, {
-      method: 'POST', mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    // Google Apps Script يعمل مع GET + URL parameters بشكل موثوق
+    const params = new URLSearchParams({
+      action : 'save',
+      name   : payload.name,
+      type   : payload.type,
+      school : payload.school || '',
+      date   : payload.date,
+      time   : payload.time
+    });
+    const r = await fetch(SHEETS_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'cors'
     });
     const d = await r.json();
     if(d.status === 'ok'){
       animCount(d.count);
       smsg.className = 'smsg ok';
       smsg.textContent = '✅ تم الحفظ في Google Sheets بنجاح!';
-    } else throw '';
-  } catch {
+    } else throw new Error(d.message || 'unknown');
+  } catch(err) {
+    console.warn('Sheets error:', err);
     const c = parseInt(localStorage.getItem('cert_count') || '0') + 1;
     localStorage.setItem('cert_count', c);
     document.getElementById('counterNum').textContent = toAr(c);
